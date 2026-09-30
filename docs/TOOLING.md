@@ -1,6 +1,6 @@
 # Tooling
 
-Shared tooling is a **versioned package**, not files owned by the aggregator. See
+Shared tooling is a **versioned package**, not files owned by the workspace root. See
 [`ADR-0001`](./ADR-0001-repo-topology.md) for why.
 
 ## `@aws-rex/config`
@@ -80,10 +80,10 @@ Never commit CodeArtifact tokens — keep them in the developer/CI environment. 
 ## Why there is no catalog and no `workspace:*`
 
 Both are workspace-only protocols, expanded only at publish time. A standalone clone cannot resolve
-them, which would make the aggregator a hard build dependency of every source repo. Instead:
+them, which would make the workspace root a hard build dependency of every source repo. Instead:
 
 - source repos declare plain semver ranges (registry-ready, self-describing);
-- the aggregator sets `linkWorkspacePackages: true` to link local checkouts whose version satisfies
+- the workspace root sets `linkWorkspacePackages: true` to link local checkouts whose version satisfies
   the range;
 - Renovate/Dependabot keeps ranges current across repos (the polyrepo replacement for `catalog:`).
 
@@ -101,7 +101,7 @@ pnpm check         # format:check + lint + typecheck + test
 
 Each source repo exposes `lint`, `format`, `format:check`, and (where relevant) `typecheck`, `test`, `build`.
 
-> `pnpm format` delegates into the source repos because the aggregator `.gitignore` ignores `src/*/` and
+> `pnpm format` delegates into the source repos because the workspace root `.gitignore` ignores `src/*/` and
 > Prettier honors `.gitignore`.
 
 ## Dependency build scripts

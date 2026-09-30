@@ -1,7 +1,7 @@
 packages:
   - 'src/*'
 
-# This aggregator is a LOCAL DEVELOPMENT convenience only. Source repos are independent
+# This workspace root is a LOCAL DEVELOPMENT convenience only. Source repos are independent
 # repositories that must remain installable on their own, so they declare plain
 # semver ranges (never workspace:*/catalog:). When a source repo's range is satisfied by
 # a local checkout, pnpm links that checkout here instead of hitting a registry.

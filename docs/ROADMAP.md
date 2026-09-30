@@ -34,7 +34,7 @@ Prioritized, top to bottom. Shipped work is listed for context.
    `Header`/`Footer`, proving cross-repo inter-dependency.
 10. **Apollo GraphQL in `dashboard`.** App Router RSC-friendly Apollo setup plus a first query.
 11. **Per-repo CI.** Each source repo runs `install && check` (and `build` for apps) in its own repo, with no
-    dependency on the aggregator — the real test of the polyrepo boundary.
+    dependency on the workspace root — the real test of the polyrepo boundary.
 12. **Typed lint rules.** Move `typescript-eslint` from `recommended` to `recommendedTypeChecked`
     (project service). Blocked on TS 7 support in `typescript-eslint`.
 13. **`strictPeerDependencies`.** Optional hard-fail on peer conflicts, if teams want it enforced

@@ -1,4 +1,4 @@
-# ADR-0001: Repository topology — polyrepo with a dev aggregator
+# ADR-0001: Repository topology — polyrepo with a dev workspace root
 
 - **Status:** Accepted
 - **Date:** 2026-09-30
@@ -12,7 +12,7 @@ into one workspace for local development.
 
 The first iteration of this setup expressed the cross-repo contract with **monorepo idioms**:
 
-- source repos re-exported the aggregator's config by relative path (`../../eslint.config.mjs`);
+- source repos re-exported the workspace root's config by relative path (`../../eslint.config.mjs`);
 - dependency versions were pinned in a workspace `catalog:` and referenced with `catalog:`;
 - cross-repo code used `workspace:*`.
 
@@ -23,7 +23,7 @@ build dependency of every source repo — the opposite of the intended autonomy.
 
 ## Decision
 
-Treat this as a **polyrepo with a local development aggregator**, not a monorepo.
+Treat this as a **polyrepo with a local development workspace root**, not a monorepo.
 
 **Governing rule:** across a repository boundary, the only legal coupling is a **versioned
 artifact**. If it cannot be installed by name (registry or git tag), it is not a contract.
@@ -34,7 +34,7 @@ Concretely:
    dependency referenced by **semver**. Source repos reference it by name, never by path.
 2. **Cross-repo code is a package.** `@aws-rex/common-components` is referenced by **semver**.
 3. **Source repos declare plain semver ranges** — no `catalog:`, no `workspace:*`.
-4. **The aggregator is thin.** `pnpm-workspace.yaml` is reduced to `packages: ['src/*']` plus
+4. **The workspace root is thin.** `pnpm-workspace.yaml` is reduced to `packages: ['src/*']` plus
    `linkWorkspacePackages: true`, which links a local source repo only when its version satisfies the
    consumer's range. Local DX stays one-command; the coupling does not exist.
 5. **Version enforcement is `peerDependencies`.** For example, `@aws-rex/config` peers on
@@ -44,7 +44,7 @@ Concretely:
 
 ## Phasing
 
-This decision is being adopted **local-first**: the aggregator links local checkouts and nothing is
+This decision is being adopted **local-first**: the workspace root links local checkouts and nothing is
 published yet. Publishing to the AWS private registry (CodeArtifact) and versioning (Changesets) are
 deliberately deferred until the local development loop is settled. See
 [`../docs/TOOLING.md`](./TOOLING.md#local-first-development-current-phase).
@@ -56,13 +56,13 @@ deliberately deferred until the local development loop is settled. See
 - Every source repo is installable, testable, and buildable from its own clone, with only registry (or
   git-tag) dependencies.
 - Teams own their repo end to end; platform owns the config package.
-- No hidden build dependency on the aggregator; the aggregator can be discarded without touching the
+- No hidden build dependency on the workspace root; the workspace root can be discarded without touching the
   source repos.
 
 **Negative / obligations**
 
 - The shared packages must actually be **published** somewhere (private registry, GitHub Packages,
-  or a git tag) for standalone resolution. Until then, only the aggregator can install them.
+  or a git tag) for standalone resolution. Until then, only the workspace root can install them.
 - Cross-repo changes are coordinated by **version bump + range update**, not an atomic commit. This
   is the deliberate trade for autonomy.
 - Versions must be kept current with Renovate; `catalog:` no longer guarantees a singleton version.
@@ -72,7 +72,7 @@ deliberately deferred until the local development loop is settled. See
 - **True monorepo.** One repo, one CI, one lockfile. Then `catalog:`/`workspace:*`/root config are
   all _correct_, but teams lose independent release cadence. Rejected: incompatible with the
   stated goal of team autonomy.
-- **Hybrid (keep `catalog:`/`workspace:*`).** Good aggregator DX, but standalone clones cannot
+- **Hybrid (keep `catalog:`/`workspace:*`).** Good local DX, but standalone clones cannot
   install. Rejected: violates the stated requirement.
 - **No shared package; per-repo self-contained config.** Maximum autonomy, but guaranteed drift and
   duplicated rules. Rejected as the default; mitigated by a single platform package instead.
