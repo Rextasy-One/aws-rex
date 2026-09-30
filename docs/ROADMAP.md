@@ -15,13 +15,13 @@ Prioritized, top to bottom. Shipped work is listed for context.
 
 ## Next
 
-6. **Publish the shared packages.** Standalone clones currently resolve `@aws-rex/config@^1.0.0` and
-   `@aws-rex/common-components@^1.0.0` only inside the aggregator. To make the polyrepo contract real:
-   - choose a target — private registry, GitHub Packages, or git tags
-     (`github:Rextasy-One/config#vX.Y.Z`);
-   - add `publishConfig` to both packages;
-   - decide the publish artifact for `common-components` (raw TS source today; add `tsup` + `dist`
-     exports if publishing to a registry).
+6. **Publish the shared packages (deferred).** Development is intentionally local-first: local links
+   cover everything until release. When publishing to the **AWS private registry (CodeArtifact)**:
+   - authenticate with `aws codeartifact login` and scope `@aws-rex:registry` in `.npmrc`;
+   - add `publishConfig` to `@aws-rex/config` and `@aws-rex/common-components`;
+   - decide the `common-components` artifact (raw TS source today; `tsup` + `dist` for registry);
+   - keep tokens out of the repo.
+     See [`TOOLING.md`](./TOOLING.md#deferred-publishing-to-aws-codeartifact).
 7. **Renovate/Dependabot.** Per-repo config to keep shared-package ranges and toolchain versions
    current across teams — the polyrepo replacement for `catalog:`.
 8. **`common-components` harness.** A standalone preview so the library is reviewable on GitHub

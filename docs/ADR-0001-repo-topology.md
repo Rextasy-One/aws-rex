@@ -42,6 +42,13 @@ Concretely:
    the ecosystem expects it.
 6. **Alignment across teams is tooling, not protocol.** Renovate/Dependabot replaces `catalog:`.
 
+## Phasing
+
+This decision is being adopted **local-first**: the aggregator links local checkouts and nothing is
+published yet. Publishing to the AWS private registry (CodeArtifact) and versioning (Changesets) are
+deliberately deferred until the local development loop is settled. See
+[`../docs/TOOLING.md`](./TOOLING.md#local-first-development-current-phase).
+
 ## Consequences
 
 **Positive**

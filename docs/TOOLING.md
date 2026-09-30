@@ -48,6 +48,35 @@ dependencies of the config package, mirroring how `eslint-config-next` ships its
 
 This is the "must be resolved" contract: a consumer cannot silently run a different tool major.
 
+## Local-first development (current phase)
+
+Until publishing is set up, develop entirely through local links. Nothing needs to be published,
+version-bumped, or installed from a registry:
+
+- `linkWorkspacePackages: true` symlinks `src/config` and `src/common-components` into every pod.
+- Editing their source is picked up **live** — no reinstall, no version bump. (Verified: changing
+  `src/config/prettier.js` immediately changes what a pod resolves.)
+- Keep every `@aws-rex/*` package and its consumers on a satisfying range (currently all `1.0.0` /
+  `^1.0.0`). Local linking only requires the range to match, so if a package ever moves to a new
+  major, bump the consumer range in the same change.
+- `preferWorkspacePackages: true` + `saveWorkspaceProtocol: false` stop `pnpm add` from writing
+  `workspace:*` back into a manifest.
+
+## Deferred: publishing to AWS CodeArtifact
+
+Publishing and versioning are intentionally out of scope for the local-first phase. When the time
+comes:
+
+1. Authenticate: `aws codeartifact login --tool npm --repository <repo> --domain <domain> --domain-owner <account>`.
+2. Scope the registry in `.npmrc` (or publishConfig):
+   `@aws-rex:registry=https://<domain>-<account>.d.codeartifact.<region>.amazonaws.com/npm/<repo>/`.
+3. Add `publishConfig` to `@aws-rex/config` and `@aws-rex/common-components` (the latter likely wants
+   a `tsup` build + `dist` exports before publishing).
+4. Introduce Changesets and bump consumer ranges on release.
+
+Never commit CodeArtifact tokens — keep them in the developer/CI environment. See
+[`ROADMAP.md`](./ROADMAP.md).
+
 ## Why there is no catalog and no `workspace:*`
 
 Both are workspace-only protocols, expanded only at publish time. A standalone clone cannot resolve

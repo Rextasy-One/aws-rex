@@ -7,6 +7,12 @@ packages:
 # a local checkout, pnpm links that checkout here instead of hitting a registry.
 linkWorkspacePackages: true
 
+# Keep the local-first workflow from silently rewriting manifests back to
+# workspace-only protocols: `pnpm add @aws-rex/...` saves a plain semver range
+# and prefers the local checkout.
+preferWorkspacePackages: true
+saveWorkspaceProtocol: false
+
 # pnpm 11+ requires explicit approval before a dependency may run install
 # scripts. These are the known-good native/build toolchain packages.
 allowBuilds:
