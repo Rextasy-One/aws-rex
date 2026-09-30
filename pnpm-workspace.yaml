@@ -1,9 +1,9 @@
 packages:
   - 'src/*'
 
-# This aggregator is a LOCAL DEVELOPMENT convenience only. Pods are independent
+# This aggregator is a LOCAL DEVELOPMENT convenience only. Source repos are independent
 # repositories that must remain installable on their own, so they declare plain
-# semver ranges (never workspace:*/catalog:). When a pod's range is satisfied by
+# semver ranges (never workspace:*/catalog:). When a source repo's range is satisfied by
 # a local checkout, pnpm links that checkout here instead of hitting a registry.
 linkWorkspacePackages: true
 

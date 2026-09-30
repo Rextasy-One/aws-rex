@@ -16,7 +16,7 @@ Repo `Rextasy-One/config`. Exports:
 | `@aws-rex/config/tsconfig/react.json` | TS + JSX                              |
 | `@aws-rex/config/tsconfig/next.json`  | TS + Next.js                          |
 
-Pods consume it by name:
+Source repos consume it by name:
 
 ```jsonc
 // package.json
@@ -37,7 +37,7 @@ export default reactConfig();
 { "extends": "@aws-rex/config/tsconfig/react.json", "include": ["src"] }
 ```
 
-No pod contains a `prettier.config.mjs`, and no pod references `../../`.
+No source repo contains a `prettier.config.mjs`, and no source repo references `../../`.
 
 ## Version enforcement
 
@@ -53,9 +53,9 @@ This is the "must be resolved" contract: a consumer cannot silently run a differ
 Until publishing is set up, develop entirely through local links. Nothing needs to be published,
 version-bumped, or installed from a registry:
 
-- `linkWorkspacePackages: true` symlinks `src/config` and `src/common-components` into every pod.
+- `linkWorkspacePackages: true` symlinks `src/config` and `src/common-components` into every source repo.
 - Editing their source is picked up **live** — no reinstall, no version bump. (Verified: changing
-  `src/config/prettier.js` immediately changes what a pod resolves.)
+  `src/config/prettier.js` immediately changes what a source repo resolves.)
 - Keep every `@aws-rex/*` package and its consumers on a satisfying range (currently all `1.0.0` /
   `^1.0.0`). Local linking only requires the range to match, so if a package ever moves to a new
   major, bump the consumer range in the same change.
@@ -80,16 +80,16 @@ Never commit CodeArtifact tokens — keep them in the developer/CI environment. 
 ## Why there is no catalog and no `workspace:*`
 
 Both are workspace-only protocols, expanded only at publish time. A standalone clone cannot resolve
-them, which would make the aggregator a hard build dependency of every pod. Instead:
+them, which would make the aggregator a hard build dependency of every source repo. Instead:
 
-- pods declare plain semver ranges (registry-ready, self-describing);
+- source repos declare plain semver ranges (registry-ready, self-describing);
 - the aggregator sets `linkWorkspacePackages: true` to link local checkouts whose version satisfies
   the range;
 - Renovate/Dependabot keeps ranges current across repos (the polyrepo replacement for `catalog:`).
 
 ## Entry points
 
-Root scripts remain the workspace-wide entry points and simply delegate to each pod:
+Root scripts remain the workspace-wide entry points and simply delegate to each source repo:
 
 ```bash
 pnpm lint          # pnpm -r run lint
@@ -99,9 +99,9 @@ pnpm format:check  # pnpm -r run format:check && prettier --check .
 pnpm check         # format:check + lint + typecheck + test
 ```
 
-Each pod exposes `lint`, `format`, `format:check`, and (where relevant) `typecheck`, `test`, `build`.
+Each source repo exposes `lint`, `format`, `format:check`, and (where relevant) `typecheck`, `test`, `build`.
 
-> `pnpm format` delegates into the pods because the aggregator `.gitignore` ignores `src/*/` and
+> `pnpm format` delegates into the source repos because the aggregator `.gitignore` ignores `src/*/` and
 > Prettier honors `.gitignore`.
 
 ## Dependency build scripts

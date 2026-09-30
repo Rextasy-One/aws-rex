@@ -4,7 +4,7 @@ Prioritized, top to bottom. Shipped work is listed for context.
 
 ## Shipped
 
-1. **READMEs** in every repo + the `src/` pod pattern documentation.
+1. **READMEs** in every repo + the `src/` source-repo pattern documentation.
 2. **Polyrepo topology** ([ADR-0001](./ADR-0001-repo-topology.md)): versioned artifacts only across
    repo boundaries; no `catalog:`, no `workspace:*`.
 3. **`@aws-rex/config`** (`Rextasy-One/config`): shared ESLint / Prettier / tsconfig as a package
@@ -31,9 +31,9 @@ Prioritized, top to bottom. Shipped work is listed for context.
 ## Later
 
 9. **`marketing-site` static pipeline.** Vite or Next static export that renders the shared
-   `Header`/`Footer`, proving cross-pod inter-dependency.
+   `Header`/`Footer`, proving cross-repo inter-dependency.
 10. **Apollo GraphQL in `dashboard`.** App Router RSC-friendly Apollo setup plus a first query.
-11. **Per-repo CI.** Each pod runs `install && check` (and `build` for apps) in its own repo, with no
+11. **Per-repo CI.** Each source repo runs `install && check` (and `build` for apps) in its own repo, with no
     dependency on the aggregator — the real test of the polyrepo boundary.
 12. **Typed lint rules.** Move `typescript-eslint` from `recommended` to `recommendedTypeChecked`
     (project service). Blocked on TS 7 support in `typescript-eslint`.

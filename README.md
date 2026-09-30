@@ -1,6 +1,6 @@
 # aws-rex
 
-A **local development aggregator** for independent repositories ("pods"). It is not a product and
+A **local development aggregator** for independent repositories ("source repos"). It is not a product and
 not a published package.
 
 > The design decision and tradeoffs are recorded in
@@ -11,11 +11,11 @@ not a published package.
 > Across a repository boundary, the only legal coupling is a **versioned artifact**. If it cannot be
 > installed by name (registry or git tag), it is not a contract.
 
-Pods therefore declare plain **semver** ranges — never `workspace:*` or `catalog:`, both of which
+Source repos therefore declare plain **semver** ranges — never `workspace:*` or `catalog:`, both of which
 are publish-time rewrites that a standalone clone cannot resolve. This aggregator links local
 checkouts only as a convenience.
 
-## The `src/` pod pattern
+## The `src/` source-repo pattern
 
 Every direct child of `src/` is its **own git repository**:
 
@@ -30,10 +30,10 @@ aws-rex/                     # aggregator  (Rextasy-One/aws-rex)
 ├── pnpm-workspace.yaml      # packages: ['src/*'] + linkWorkspacePackages: true
 ├── docs/                    # ADR, tooling, roadmap
 └── src/
-    ├── config/              # pod: @aws-rex/config           (Rextasy-One/config)
-    ├── common-components/   # pod: @aws-rex/common-components (Rextasy-One/common-components)
-    ├── dashboard/           # pod: @aws-rex/dashboard        (Rextasy-One/dashboard)
-    └── marketing-site/      # pod: @aws-rex/marketing-site   (Rextasy-One/marketing-site)
+    ├── config/              # repo: @aws-rex/config           (Rextasy-One/config)
+    ├── common-components/   # repo: @aws-rex/common-components (Rextasy-One/common-components)
+    ├── dashboard/           # repo: @aws-rex/dashboard        (Rextasy-One/dashboard)
+    └── marketing-site/      # repo: @aws-rex/marketing-site   (Rextasy-One/marketing-site)
 ```
 
 ## Repos
@@ -46,7 +46,7 @@ aws-rex/                     # aggregator  (Rextasy-One/aws-rex)
 | `Rextasy-One/marketing-site`    | `@aws-rex/marketing-site`    | Static marketing site (placeholder) |
 | `Rextasy-One/aws-rex`           | —                            | This dev aggregator (private)       |
 
-Dependency direction: `dashboard` and `marketing-site` → `common-components`; every pod → `config`.
+Dependency direction: `dashboard` and `marketing-site` → `common-components`; every source repo → `config`.
 
 ## How local linking works
 
@@ -58,7 +58,7 @@ packages:
 linkWorkspacePackages: true
 ```
 
-A pod declares `"@aws-rex/config": "^1.0.0"`. Here, pnpm links the local `src/config` because its
+A source repo declares `"@aws-rex/config": "^1.0.0"`. Here, pnpm links the local `src/config` because its
 version satisfies the range. On a standalone clone there is no workspace, so pnpm resolves the same
 range from the registry — same `package.json`, two environments.
 
@@ -71,14 +71,14 @@ pnpm dev:dashboard   # http://localhost:3000
 
 ## Commands
 
-| Command                             | Purpose                                        |
-| ----------------------------------- | ---------------------------------------------- |
-| `pnpm lint`                         | ESLint across every pod                        |
-| `pnpm format` / `pnpm format:check` | Prettier across every pod + aggregator docs    |
-| `pnpm typecheck`                    | `tsc --noEmit` where defined                   |
-| `pnpm test`                         | Unit tests (Vitest)                            |
-| `pnpm build`                        | Build every pod that defines it                |
-| `pnpm check`                        | `format:check` + `lint` + `typecheck` + `test` |
+| Command                             | Purpose                                             |
+| ----------------------------------- | --------------------------------------------------- |
+| `pnpm lint`                         | ESLint across every source repo                     |
+| `pnpm format` / `pnpm format:check` | Prettier across every source repo + aggregator docs |
+| `pnpm typecheck`                    | `tsc --noEmit` where defined                        |
+| `pnpm test`                         | Unit tests (Vitest)                                 |
+| `pnpm build`                        | Build every source repo that defines it             |
+| `pnpm check`                        | `format:check` + `lint` + `typecheck` + `test`      |
 
 ## Tooling
 
