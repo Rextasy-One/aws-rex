@@ -1,48 +1,66 @@
 # Tooling
 
-## Single source of truth
+Shared tooling is a **versioned package**, not files owned by the aggregator. See
+[`ADR-0001`](./ADR-0001-repo-topology.md) for why.
 
-Lint and format configuration live at the workspace root, not inside the pods:
+## `@aws-rex/config`
 
-- `eslint.config.mjs` — exports `baseConfig()` and `reactConfig()` factories.
-- `prettier.config.mjs` — the shared Prettier options.
-- `pnpm-workspace.yaml` — the `catalog:` block pins every tool version.
+Repo `Rextasy-One/config`. Exports:
 
-Each pod ships a **thin** config that re-exports the root:
+| Subpath                               | Purpose                               |
+| ------------------------------------- | ------------------------------------- |
+| `@aws-rex/config/prettier`            | Prettier config object                |
+| `@aws-rex/config/eslint`              | `baseConfig`, `reactConfig` factories |
+| `@aws-rex/config/eslint/next`         | `nextConfig` factory                  |
+| `@aws-rex/config/tsconfig/base.json`  | TS base                               |
+| `@aws-rex/config/tsconfig/react.json` | TS + JSX                              |
+| `@aws-rex/config/tsconfig/next.json`  | TS + Next.js                          |
+
+Pods consume it by name:
+
+```jsonc
+// package.json
+{
+  "prettier": "@aws-rex/config/prettier",
+  "devDependencies": { "@aws-rex/config": "^1.0.0" },
+}
+```
 
 ```js
-// src/<pod>/eslint.config.mjs
-import { reactConfig } from '../../eslint.config.mjs';
-
+// eslint.config.mjs
+import { reactConfig } from '@aws-rex/config/eslint';
 export default reactConfig();
 ```
 
-```js
-// src/<pod>/prettier.config.mjs
-export { default } from '../../prettier.config.mjs';
+```jsonc
+// tsconfig.json
+{ "extends": "@aws-rex/config/tsconfig/react.json", "include": ["src"] }
 ```
 
-A pod that needs framework-specific rules composes on top of the root factory. `dashboard` is the
-example — it spreads `baseConfig()` and then adds `eslint-config-next`:
+No pod contains a `prettier.config.mjs`, and no pod references `../../`.
 
-```js
-// src/dashboard/eslint.config.mjs
-import { defineConfig, globalIgnores } from 'eslint/config';
-import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
-import nextTypescript from 'eslint-config-next/typescript';
-import { baseConfig } from '../../eslint.config.mjs';
+## Version enforcement
 
-export default defineConfig([
-  ...baseConfig({ browser: true }),
-  ...nextCoreWebVitals,
-  ...nextTypescript,
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
-]);
-```
+`@aws-rex/config` declares peers: `eslint ^9`, `prettier ^3`, `typescript ^5`, plus an optional
+`eslint-config-next`. The plugin packages (`typescript-eslint`, `eslint-plugin-react`,
+`eslint-plugin-react-hooks`, `eslint-config-prettier`, `@eslint/js`, `globals`) are regular
+dependencies of the config package, mirroring how `eslint-config-next` ships its own plugins.
+
+This is the "must be resolved" contract: a consumer cannot silently run a different tool major.
+
+## Why there is no catalog and no `workspace:*`
+
+Both are workspace-only protocols, expanded only at publish time. A standalone clone cannot resolve
+them, which would make the aggregator a hard build dependency of every pod. Instead:
+
+- pods declare plain semver ranges (registry-ready, self-describing);
+- the aggregator sets `linkWorkspacePackages: true` to link local checkouts whose version satisfies
+  the range;
+- Renovate/Dependabot keeps ranges current across repos (the polyrepo replacement for `catalog:`).
 
 ## Entry points
 
-The root scripts are the lint/format **entry points** for the whole workspace:
+Root scripts remain the workspace-wide entry points and simply delegate to each pod:
 
 ```bash
 pnpm lint          # pnpm -r run lint
@@ -52,46 +70,18 @@ pnpm format:check  # pnpm -r run format:check && prettier --check .
 pnpm check         # format:check + lint + typecheck + test
 ```
 
-> `pnpm format` must delegate into the pods: the root `.gitignore` ignores `src/*/`, and Prettier
-> honours `.gitignore`, so a bare `prettier .` at the root would skip every pod.
+Each pod exposes `lint`, `format`, `format:check`, and (where relevant) `typecheck`, `test`, `build`.
 
-Each pod also exposes `lint`, `format`, `format:check`, `typecheck`, and (where relevant) `test`.
-
-## Dependency catalog
-
-Never hard-code a tool version inside a pod. Add it to the `catalog:` block in
-`pnpm-workspace.yaml` and reference it as `"catalog:"`:
-
-```jsonc
-// src/<pod>/package.json
-{
-  "devDependencies": {
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-  },
-}
-```
-
-This keeps a pod that is checked out on its own readable: `catalog:` resolves to the same pinned
-range everywhere in the workspace.
+> `pnpm format` delegates into the pods because the aggregator `.gitignore` ignores `src/*/` and
+> Prettier honors `.gitignore`.
 
 ## Dependency build scripts
 
-pnpm 11+ blocks dependency install scripts until they are approved. The approved native/build
-toolchain packages (Tailwind's `@tailwindcss/oxide`, `sharp`, `unrs-resolver`) are listed under
-`allowBuilds:` in `pnpm-workspace.yaml`. Add new entries there deliberately — never approve blindly.
+pnpm 11+ blocks install scripts until approved. The approved native toolchain packages are listed
+under `allowBuilds:` in `pnpm-workspace.yaml`. Add new entries deliberately.
 
 ## Version decisions
 
-- **TypeScript 5.x**, not 7.x: `typescript-eslint` (as of 8.71.0) supports `<6.1.0`, so typed ESLint
-  rules would not run against the native TS 7 compiler.
-- **ESLint 9** (flat config): `eslint-config-next` and the plugin ecosystem currently target it.
+- **TypeScript 5.x**, not 7.x: `typescript-eslint` (as of 8.71.0) supports `<6.1.0`.
+- **ESLint 9** flat config; the plugin ecosystem and `eslint-config-next` target it.
 - **Vitest 5** for component unit tests (jsdom + Testing Library).
-
-## Caveat: standalone extraction
-
-Because the root config lives _outside_ each pod's git repository, a pod cloned on its own cannot
-resolve `../../eslint.config.mjs`. That is fine for the normal workspace development flow, but when a
-pod is published or built in isolation it needs a self-contained config. Options are tracked in
-[`ROADMAP.md`](./ROADMAP.md) (a bundled `@aws-rex/eslint-config` package, or vendoring the config at
-publish time).
