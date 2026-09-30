@@ -69,8 +69,13 @@ range from the registry — same `package.json`, two environments.
 
 ```bash
 pnpm install
-pnpm dev:dashboard   # http://localhost:3000
+pnpm dev:marketing   # marketing site / splash → http://localhost:3000
+pnpm dev:dashboard   # dashboard app         → http://localhost:3001
 ```
+
+The marketing site proxies `/dashboard` to the dashboard origin, so
+[http://localhost:3000/dashboard](http://localhost:3000/dashboard) serves the dashboard app through
+the marketing origin.
 
 ## Commands
 

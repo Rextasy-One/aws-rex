@@ -17,9 +17,10 @@ Prioritized, top to bottom. Shipped work is listed for context.
 
 ## Next
 
-7. **Production topology for the splash.** `marketing-site` serves `/` on port 3001; the shared
-   header links to `/dashboard`. Decide whether one host routes `/dashboard` to the dashboard
-   deployment (reverse proxy or Next `rewrites`), or they stay separate origins with an absolute URL.
+7. **Production topology for the dashboard.** Development is handled: the marketing site (3000) runs
+   on the canonical port and proxies `/dashboard` to the dashboard (3001) via `DASHBOARD_ORIGIN`.
+   For production, set that origin to the dashboard's deployed URL — or front both with one
+   load balancer / reverse proxy.
 8. **Resume content.** `source/marketing-site/src/app/resume/page.tsx` is a stub.
 9. **Publish the shared packages (deferred).** Development is intentionally local-first: local links
    cover everything until release. When publishing to the **AWS private registry (CodeArtifact)**:
