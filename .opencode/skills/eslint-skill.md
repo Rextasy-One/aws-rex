@@ -4,4 +4,3 @@ description: Use this skill to format files, fix code layouts, or style files be
 ---
 
 # Prettier Formatting Workflow
-

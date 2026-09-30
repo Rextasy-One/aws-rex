@@ -1,2 +1,56 @@
 packages:
   - 'src/*'
+
+# Single source of truth for tool versions across every pod.
+# Pods reference these with the "catalog:" protocol so versions never drift.
+catalog:
+  '@eslint/js': ^9.39.5
+  '@tailwindcss/postcss': ^4.3.3
+  '@testing-library/jest-dom': ^7.0.1
+  '@testing-library/react': ^16.3.3
+  '@testing-library/user-event': ^14.6.7
+  '@types/node': ^24.19.0
+  '@types/react': ^19.3.0
+  '@types/react-dom': ^19.3.0
+  '@vitejs/plugin-react': ^6.1.1
+  eslint: ^9.39.5
+  eslint-config-next: ^16.3.8
+  eslint-config-prettier: ^10.1.8
+  eslint-plugin-react: ^7.37.5
+  eslint-plugin-react-hooks: ^7.1.1
+  globals: ^17.12.0
+  jsdom: ^30.1.1
+  next: ^16.3.8
+  prettier: ^3.9.9
+  react: ^19.3.0
+  react-dom: ^19.3.0
+  tailwindcss: ^4.3.3
+  typescript: ^5.9.3
+  typescript-eslint: ^8.71.0
+  vitest: ^5.0.3
+
+# pnpm 11+ requires explicit approval before a dependency may run install
+# scripts. These are the known-good native/build toolchain packages.
+allowBuilds:
+  '@tailwindcss/oxide': true
+  sharp: true
+  unrs-resolver: true
+
+# A global minimumReleaseAge policy is in effect; these freshly published
+# versions are allow-listed so the lockfile resolves deterministically.
+minimumReleaseAgeExclude:
+  - '@next/env@16.3.8'
+  - '@next/eslint-plugin-next@16.3.8'
+  - '@next/swc-darwin-arm64@16.3.8'
+  - '@next/swc-darwin-x64@16.3.8'
+  - '@next/swc-linux-arm64-gnu@16.3.8'
+  - '@next/swc-linux-arm64-musl@16.3.8'
+  - '@next/swc-linux-x64-gnu@16.3.8'
+  - '@next/swc-linux-x64-musl@16.3.8'
+  - '@next/swc-win32-arm64-msvc@16.3.8'
+  - '@next/swc-win32-x64-msvc@16.3.8'
+  - '@vitest/mocker@5.0.3'
+  - '@vitest/spy@5.0.3'
+  - eslint-config-next@16.3.8
+  - next@16.3.8
+  - vitest@5.0.3
