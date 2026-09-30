@@ -9,33 +9,37 @@ Prioritized, top to bottom. Shipped work is listed for context.
    repo boundaries; no `catalog:`, no `workspace:*`.
 3. **`@aws-rex/config`** (`Rextasy-One/config`): shared ESLint / Prettier / tsconfig as a package
    with peers; consumed by name via semver + `linkWorkspacePackages`.
-4. **`common-components`**: `Header`, `Footer`, unit tests.
+4. **`common-components`**: `Header`, `Footer`, canonical `BRAND` constant, unit tests.
 5. **`dashboard`**: Next.js 16 (App Router) + Tailwind 4 Hello World consuming the shared components
    from source (`transpilePackages` + Tailwind `@source`).
+6. **`marketing-site`**: promoted to a real Next.js app serving the workspace splash at `/`, with a
+   `/resume` stub. Shared header nav is Home / Dashboard / Resume.
 
 ## Next
 
-6. **Publish the shared packages (deferred).** Development is intentionally local-first: local links
+7. **Production topology for the splash.** `marketing-site` serves `/` on port 3001; the shared
+   header links to `/dashboard`. Decide whether one host routes `/dashboard` to the dashboard
+   deployment (reverse proxy or Next `rewrites`), or they stay separate origins with an absolute URL.
+8. **Resume content.** `source/marketing-site/src/app/resume/page.tsx` is a stub.
+9. **Publish the shared packages (deferred).** Development is intentionally local-first: local links
    cover everything until release. When publishing to the **AWS private registry (CodeArtifact)**:
    - authenticate with `aws codeartifact login` and scope `@aws-rex:registry` in `.npmrc`;
    - add `publishConfig` to `@aws-rex/config` and `@aws-rex/common-components`;
    - decide the `common-components` artifact (raw TS source today; `tsup` + `dist` for registry);
    - keep tokens out of the repo.
      See [`TOOLING.md`](./TOOLING.md#deferred-publishing-to-aws-codeartifact).
-7. **Renovate/Dependabot.** Per-repo config to keep shared-package ranges and toolchain versions
-   current across teams — the polyrepo replacement for `catalog:`.
-8. **`common-components` harness.** A standalone preview so the library is reviewable on GitHub
-   independently. Recommended: **Vite + React preview** (light, static-deployable); Storybook once
-   the surface grows.
+10. **Renovate/Dependabot.** Per-repo config to keep shared-package ranges and toolchain versions
+    current across teams — the polyrepo replacement for `catalog:`.
+11. **`common-components` harness.** A standalone preview so the library is reviewable on GitHub
+    independently. Recommended: **Vite + React preview** (light, static-deployable); Storybook once
+    the surface grows.
 
 ## Later
 
-9. **`marketing-site` static pipeline.** Vite or Next static export that renders the shared
-   `Header`/`Footer`, proving cross-repo inter-dependency.
-10. **Apollo GraphQL in `dashboard`.** App Router RSC-friendly Apollo setup plus a first query.
-11. **Per-repo CI.** Each source repo runs `install && check` (and `build` for apps) in its own repo, with no
+12. **Apollo GraphQL in `dashboard`.** App Router RSC-friendly Apollo setup plus a first query.
+13. **Per-repo CI.** Each source repo runs `install && check` (and `build` for apps) in its own repo, with no
     dependency on the workspace root — the real test of the polyrepo boundary.
-12. **Typed lint rules.** Move `typescript-eslint` from `recommended` to `recommendedTypeChecked`
+14. **Typed lint rules.** Move `typescript-eslint` from `recommended` to `recommendedTypeChecked`
     (project service). Blocked on TS 7 support in `typescript-eslint`.
-13. **`strictPeerDependencies`.** Optional hard-fail on peer conflicts, if teams want it enforced
+15. **`strictPeerDependencies`.** Optional hard-fail on peer conflicts, if teams want it enforced
     rather than auto-resolved.

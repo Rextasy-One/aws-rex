@@ -32,19 +32,22 @@ aws-rex/                     # workspace root  (Rextasy-One/aws-rex)
 └── source/
     ├── config/              # repo: @aws-rex/config           (Rextasy-One/config)
     ├── common-components/   # repo: @aws-rex/common-components (Rextasy-One/common-components)
-    ├── dashboard/           # repo: @aws-rex/dashboard        (Rextasy-One/dashboard)
-    └── marketing-site/      # repo: @aws-rex/marketing-site   (Rextasy-One/marketing-site)
+    ├── marketing-site/      # repo: @aws-rex/marketing-site   (Rextasy-One/marketing-site)
+    └── dashboard/           # repo: @aws-rex/dashboard        (Rextasy-One/dashboard)
 ```
 
 ## Repos
 
-| Repo                            | Package                      | Role                                |
-| ------------------------------- | ---------------------------- | ----------------------------------- |
-| `Rextasy-One/config`            | `@aws-rex/config`            | Shared ESLint / Prettier / tsconfig |
-| `Rextasy-One/common-components` | `@aws-rex/common-components` | Shared React UI primitives          |
-| `Rextasy-One/dashboard`         | `@aws-rex/dashboard`         | Next.js 16 + Tailwind 4 app         |
-| `Rextasy-One/marketing-site`    | `@aws-rex/marketing-site`    | Static marketing site (placeholder) |
-| `Rextasy-One/aws-rex`           | —                            | This dev workspace root (private)   |
+| Repo                            | Package                      | Role                                 |
+| ------------------------------- | ---------------------------- | ------------------------------------ |
+| `Rextasy-One/config`            | `@aws-rex/config`            | Shared ESLint / Prettier / tsconfig  |
+| `Rextasy-One/common-components` | `@aws-rex/common-components` | Shared React UI primitives + `BRAND` |
+| `Rextasy-One/marketing-site`    | `@aws-rex/marketing-site`    | Splash / marketing site (Next.js)    |
+| `Rextasy-One/dashboard`         | `@aws-rex/dashboard`         | Next.js 16 + Tailwind 4 app          |
+| `Rextasy-One/aws-rex`           | —                            | This dev workspace root (private)    |
+
+`marketing-site` is the entry point / splash (`/`); `dashboard` is the app (`/dashboard`).
+| `Rextasy-One/aws-rex` | — | This dev workspace root (private) |
 
 Dependency direction: `dashboard` and `marketing-site` → `common-components`; every source repo → `config`.
 
