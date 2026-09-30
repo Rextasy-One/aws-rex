@@ -162,212 +162,156 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@eslint/js':
-      specifier: ^9.39.5
-      version: 9.39.5
-    '@tailwindcss/postcss':
-      specifier: ^4.3.3
-      version: 4.3.3
-    '@testing-library/jest-dom':
-      specifier: ^7.0.1
-      version: 7.0.1
-    '@testing-library/react':
-      specifier: ^16.3.3
-      version: 16.3.3
-    '@testing-library/user-event':
-      specifier: ^14.6.7
-      version: 14.6.7
-    '@types/node':
-      specifier: ^24.19.0
-      version: 24.19.0
-    '@types/react':
-      specifier: ^19.3.0
-      version: 19.3.0
-    '@types/react-dom':
-      specifier: ^19.3.0
-      version: 19.3.0
-    '@vitejs/plugin-react':
-      specifier: ^6.1.1
-      version: 6.1.1
-    eslint:
-      specifier: ^9.39.5
-      version: 9.39.5
-    eslint-config-next:
-      specifier: ^16.3.8
-      version: 16.3.8
-    eslint-config-prettier:
-      specifier: ^10.1.8
-      version: 10.1.8
-    eslint-plugin-react:
-      specifier: ^7.37.5
-      version: 7.37.5
-    eslint-plugin-react-hooks:
-      specifier: ^7.1.1
-      version: 7.1.1
-    globals:
-      specifier: ^17.12.0
-      version: 17.12.0
-    jsdom:
-      specifier: ^30.1.1
-      version: 30.1.1
-    next:
-      specifier: ^16.3.8
-      version: 16.3.8
-    prettier:
-      specifier: ^3.9.9
-      version: 3.9.9
-    react:
-      specifier: ^19.3.0
-      version: 19.3.0
-    react-dom:
-      specifier: ^19.3.0
-      version: 19.3.0
-    tailwindcss:
-      specifier: ^4.3.3
-      version: 4.3.3
-    typescript:
-      specifier: ^5.9.3
-      version: 5.9.3
-    typescript-eslint:
-      specifier: ^8.71.0
-      version: 8.71.0
-    vitest:
-      specifier: ^5.0.3
-      version: 5.0.3
-
 importers:
 
   .:
     devDependencies:
-      '@eslint/js':
-        specifier: 'catalog:'
-        version: 9.39.5
-      '@types/node':
-        specifier: 'catalog:'
-        version: 24.19.0
-      eslint:
-        specifier: 'catalog:'
-        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
-      eslint-config-prettier:
-        specifier: 'catalog:'
-        version: 10.1.8(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))
-      eslint-plugin-react:
-        specifier: 'catalog:'
-        version: 7.37.5(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))
-      eslint-plugin-react-hooks:
-        specifier: 'catalog:'
-        version: 7.1.1(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
-      globals:
-        specifier: 'catalog:'
-        version: 17.12.0
+      '@aws-rex/config':
+        specifier: ^1.0.0
+        version: link:src/config
       prettier:
-        specifier: 'catalog:'
+        specifier: ^3.9.9
         version: 3.9.9
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      typescript-eslint:
-        specifier: 'catalog:'
-        version: 8.71.0(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
 
   src/common-components:
     devDependencies:
+      '@aws-rex/config':
+        specifier: ^1.0.0
+        version: link:../config
       '@testing-library/jest-dom':
-        specifier: 'catalog:'
+        specifier: ^7.0.1
         version: 7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.3(@types/node@24.19.0)(jsdom@30.1.1)(vite@8.3.1(@types/node@24.19.0)(jiti@2.7.0)))
       '@testing-library/react':
-        specifier: 'catalog:'
+        specifier: ^16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@testing-library/user-event':
-        specifier: 'catalog:'
+        specifier: ^14.6.7
         version: 14.6.7(@testing-library/dom@10.4.2)
       '@types/react':
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0
       '@types/react-dom':
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       '@vitejs/plugin-react':
-        specifier: 'catalog:'
+        specifier: ^6.1.1
         version: 6.1.1(vite@8.3.1(@types/node@24.19.0)(jiti@2.7.0))
       eslint:
-        specifier: 'catalog:'
+        specifier: ^9.39.5
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
       jsdom:
-        specifier: 'catalog:'
+        specifier: ^30.1.1
         version: 30.1.1
       prettier:
-        specifier: 'catalog:'
+        specifier: ^3.9.9
         version: 3.9.9
       react:
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.9.3
         version: 5.9.3
       vitest:
-        specifier: 'catalog:'
+        specifier: ^5.0.3
         version: 5.0.3(@types/node@24.19.0)(jsdom@30.1.1)(vite@8.3.1(@types/node@24.19.0)(jiti@2.7.0))
+
+  src/config:
+    dependencies:
+      '@eslint/js':
+        specifier: ^9.39.5
+        version: 9.39.5
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-react:
+        specifier: ^7.37.5
+        version: 7.37.5(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))
+      eslint-plugin-react-hooks:
+        specifier: ^7.1.1
+        version: 7.1.1(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)
+      globals:
+        specifier: ^17.12.0
+        version: 17.12.0
+      typescript-eslint:
+        specifier: ^8.71.0
+        version: 8.71.0(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+    devDependencies:
+      eslint:
+        specifier: ^9.39.5
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      eslint-config-next:
+        specifier: ^16.3.8
+        version: 16.3.8(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      prettier:
+        specifier: ^3.9.9
+        version: 3.9.9
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   src/dashboard:
     dependencies:
       '@aws-rex/common-components':
-        specifier: workspace:*
+        specifier: ^1.0.0
         version: link:../common-components
       next:
-        specifier: 'catalog:'
+        specifier: ^16.3.8
         version: 16.3.8(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@24.19.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react:
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0
       react-dom:
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0(react@19.3.0)
     devDependencies:
+      '@aws-rex/config':
+        specifier: ^1.0.0
+        version: link:../config
       '@tailwindcss/postcss':
-        specifier: 'catalog:'
+        specifier: ^4.3.3
         version: 4.3.3
       '@types/node':
-        specifier: 'catalog:'
+        specifier: ^24.19.0
         version: 24.19.0
       '@types/react':
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0
       '@types/react-dom':
-        specifier: 'catalog:'
+        specifier: ^19.3.0
         version: 19.3.0(@types/react@19.3.0)
       eslint:
-        specifier: 'catalog:'
+        specifier: ^9.39.5
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
       eslint-config-next:
-        specifier: 'catalog:'
+        specifier: ^16.3.8
         version: 16.3.8(@typescript-eslint/parser@8.71.0(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@9.39.5(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       prettier:
-        specifier: 'catalog:'
+        specifier: ^3.9.9
         version: 3.9.9
       tailwindcss:
-        specifier: 'catalog:'
+        specifier: ^4.3.3
         version: 4.3.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.9.3
         version: 5.9.3
 
   src/marketing-site:
     dependencies:
       '@aws-rex/common-components':
-        specifier: workspace:*
+        specifier: ^1.0.0
         version: link:../common-components
     devDependencies:
+      '@aws-rex/config':
+        specifier: ^1.0.0
+        version: link:../config
       eslint:
-        specifier: 'catalog:'
+        specifier: ^9.39.5
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
       prettier:
-        specifier: 'catalog:'
+        specifier: ^3.9.9
         version: 3.9.9
 
 packages:

@@ -2,7 +2,7 @@
   "name": "aws-rex",
   "version": "0.0.0",
   "private": true,
-  "description": "pnpm workspace hosting independent product pods under src/.",
+  "description": "Dev aggregator for independent Aws Rex pods under src/. Not a product; not a published package.",
   "packageManager": "pnpm@12.6.0",
   "engines": {
     "node": ">=24.21.0",
@@ -20,16 +20,9 @@
     "dev:dashboard": "pnpm --filter @aws-rex/dashboard dev",
     "dev:marketing": "pnpm --filter @aws-rex/marketing-site dev"
   },
+  "prettier": "@aws-rex/config/prettier",
   "devDependencies": {
-    "@eslint/js": "catalog:",
-    "@types/node": "catalog:",
-    "eslint": "catalog:",
-    "eslint-config-prettier": "catalog:",
-    "eslint-plugin-react": "catalog:",
-    "eslint-plugin-react-hooks": "catalog:",
-    "globals": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:",
-    "typescript-eslint": "catalog:"
+    "@aws-rex/config": "^1.0.0",
+    "prettier": "^3.9.9"
   }
 }
