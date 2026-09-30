@@ -53,9 +53,9 @@ This is the "must be resolved" contract: a consumer cannot silently run a differ
 Until publishing is set up, develop entirely through local links. Nothing needs to be published,
 version-bumped, or installed from a registry:
 
-- `linkWorkspacePackages: true` symlinks `source-repos/config` and `source-repos/common-components` into every source repo.
+- `linkWorkspacePackages: true` symlinks `source/config` and `source/common-components` into every source repo.
 - Editing their source is picked up **live** — no reinstall, no version bump. (Verified: changing
-  `source-repos/config/prettier.js` immediately changes what a source repo resolves.)
+  `source/config/prettier.js` immediately changes what a source repo resolves.)
 - Keep every `@aws-rex/*` package and its consumers on a satisfying range (currently all `1.0.0` /
   `^1.0.0`). Local linking only requires the range to match, so if a package ever moves to a new
   major, bump the consumer range in the same change.
@@ -101,7 +101,7 @@ pnpm check         # format:check + lint + typecheck + test
 
 Each source repo exposes `lint`, `format`, `format:check`, and (where relevant) `typecheck`, `test`, `build`.
 
-> `pnpm format` delegates into the source repos because the workspace root `.gitignore` ignores `source-repos/*/` and
+> `pnpm format` delegates into the source repos because the workspace root `.gitignore` ignores `source/*/` and
 > Prettier honors `.gitignore`.
 
 ## Dependency build scripts

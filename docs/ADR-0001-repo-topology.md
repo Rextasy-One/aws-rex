@@ -6,7 +6,7 @@
 
 ## Context
 
-`aws-rex` hosts several independent product repositories as direct children of `source-repos/`. Each child is
+`aws-rex` hosts several independent product repositories as direct children of `source/`. Each child is
 its own git repository with its own GitHub remote, CI surface, and release cadence. `pnpm` links them
 into one workspace for local development.
 
@@ -34,7 +34,7 @@ Concretely:
    dependency referenced by **semver**. Source repos reference it by name, never by path.
 2. **Cross-repo code is a package.** `@aws-rex/common-components` is referenced by **semver**.
 3. **Source repos declare plain semver ranges** — no `catalog:`, no `workspace:*`.
-4. **The workspace root is thin.** `pnpm-workspace.yaml` is reduced to `packages: ['source-repos/*']` plus
+4. **The workspace root is thin.** `pnpm-workspace.yaml` is reduced to `packages: ['source/*']` plus
    `linkWorkspacePackages: true`, which links a local source repo only when its version satisfies the
    consumer's range. Local DX stays one-command; the coupling does not exist.
 5. **Version enforcement is `peerDependencies`.** For example, `@aws-rex/config` peers on

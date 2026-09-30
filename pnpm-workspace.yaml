@@ -1,5 +1,5 @@
 packages:
-  - 'source-repos/*'
+  - 'source/*'
 
 # This workspace root is a LOCAL DEVELOPMENT convenience only. Source repos are independent
 # repositories that must remain installable on their own, so they declare plain
