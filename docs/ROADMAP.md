@@ -4,7 +4,7 @@ Prioritized, top to bottom. Shipped work is listed for context.
 
 ## Shipped
 
-1. **READMEs** in every repo + the `src/` source-repo pattern documentation.
+1. **READMEs** in every repo + the `source-repos/` source-repo pattern documentation.
 2. **Polyrepo topology** ([ADR-0001](./ADR-0001-repo-topology.md)): versioned artifacts only across
    repo boundaries; no `catalog:`, no `workspace:*`.
 3. **`@aws-rex/config`** (`Rextasy-One/config`): shared ESLint / Prettier / tsconfig as a package

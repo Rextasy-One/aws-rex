@@ -4,7 +4,7 @@ node_modules/
 
 # individual git repositories
 
-src/*/
+source-repos/*/
 
 # package manager
 .pnpm-debug.log*

@@ -15,21 +15,21 @@ Source repos therefore declare plain **semver** ranges — never `workspace:*` o
 are publish-time rewrites that a standalone clone cannot resolve. This workspace root links local
 checkouts only as a convenience.
 
-## The `src/` source-repo pattern
+## The `source-repos/` source-repo pattern
 
-Every direct child of `src/` is its **own git repository**:
+Every direct child of `source-repos/` is its **own git repository**:
 
 - its own `package.json`, GitHub remote, CI, and release cadence;
 - installable on its own, using only registry/tag dependencies;
-- linked into this workspace via `packages: ['src/*']` for one-command local development.
+- linked into this workspace via `packages: ['source-repos/*']` for one-command local development.
 
-The workspace root `.gitignore` ignores `src/*/`, so nested repos are tracked independently.
+The workspace root `.gitignore` ignores `source-repos/*/`, so nested repos are tracked independently.
 
 ```
 aws-rex/                     # workspace root  (Rextasy-One/aws-rex)
-├── pnpm-workspace.yaml      # packages: ['src/*'] + linkWorkspacePackages: true
+├── pnpm-workspace.yaml      # packages: ['source-repos/*'] + linkWorkspacePackages: true
 ├── docs/                    # ADR, tooling, roadmap
-└── src/
+└── source-repos/
     ├── config/              # repo: @aws-rex/config           (Rextasy-One/config)
     ├── common-components/   # repo: @aws-rex/common-components (Rextasy-One/common-components)
     ├── dashboard/           # repo: @aws-rex/dashboard        (Rextasy-One/dashboard)
@@ -54,11 +54,11 @@ Dependency direction: `dashboard` and `marketing-site` → `common-components`; 
 
 ```yaml
 packages:
-  - 'src/*'
+  - 'source-repos/*'
 linkWorkspacePackages: true
 ```
 
-A source repo declares `"@aws-rex/config": "^1.0.0"`. Here, pnpm links the local `src/config` because its
+A source repo declares `"@aws-rex/config": "^1.0.0"`. Here, pnpm links the local `source-repos/config` because its
 version satisfies the range. On a standalone clone there is no workspace, so pnpm resolves the same
 range from the registry — same `package.json`, two environments.
 
