@@ -1,0 +1,14 @@
+# .gitignore
+
+node_modules/
+
+# individual git repositories
+
+src/*/
+
+# package manager
+.pnpm-debug.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db

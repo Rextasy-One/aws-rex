@@ -1,0 +1,17 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  common-components: {}
+
+  marketing-site:
+    dependencies:
+      '@aws-rex/common-components':
+        specifier: workspace:*
+        version: link:../common-components
