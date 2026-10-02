@@ -69,13 +69,12 @@ range from the registry — same `package.json`, two environments.
 
 ```bash
 pnpm install
-pnpm dev:marketing   # marketing site / splash → http://localhost:3000
-pnpm dev:dashboard   # dashboard app         → http://localhost:3001
+pnpm setup:certs   # once (needs `brew install mkcert`)
+pnpm dev           # https://localhost:3000
 ```
 
-The marketing site proxies `/dashboard` to the dashboard origin, so
-[http://localhost:3000/dashboard](http://localhost:3000/dashboard) serves the dashboard app through
-the marketing origin.
+`https://localhost:3000` is the marketing site; `https://localhost:3000/dashboard` proxies to the
+dashboard app. `pnpm dev:http` runs the same topology without certificates.
 
 ## Commands
 
