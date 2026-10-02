@@ -49,6 +49,14 @@ const HOP_BY_HOP = new Set([
   'upgrade',
 ]);
 
+/**
+ * Node's `fetch` transparently decompresses the upstream body, so forwarding
+ * `content-encoding` makes the browser try to gunzip plain bytes and fail with
+ * `net::ERR_CONTENT_DECODING_FAILED`. `content-length` is likewise stale once the
+ * body is re-encoded.
+ */
+const BODY_DESCRIPTORS = new Set(['content-encoding', 'content-length']);
+
 function pickUpstream(pathname) {
   const isDashboard = pathname === DASHBOARD_PREFIX || pathname.startsWith(`${DASHBOARD_PREFIX}/`);
   return isDashboard ? DASHBOARD_UPSTREAM : MARKETING_UPSTREAM;
@@ -83,7 +91,11 @@ const server = https.createServer({ cert, key }, async (req, res) => {
       redirect: 'manual',
     });
 
-    res.writeHead(upstreamRes.status, Object.fromEntries(upstreamRes.headers));
+    const responseHeaders = Object.fromEntries(upstreamRes.headers);
+    for (const name of Object.keys(responseHeaders)) {
+      if (BODY_DESCRIPTORS.has(name.toLowerCase())) delete responseHeaders[name];
+    }
+    res.writeHead(upstreamRes.status, responseHeaders);
     if (upstreamRes.body) {
       for await (const chunk of upstreamRes.body) res.write(chunk);
     }
@@ -127,7 +139,12 @@ server.on('upgrade', (req, clientSocket, head) => {
   upstreamSocket.pipe(clientSocket);
 });
 
-server.listen(TLS_PORT, '127.0.0.1', () => {
+// Bind both stacks. A browser resolving `localhost` prefers ::1 on macOS, so an
+// IPv4-only listener makes https://localhost:3000 refuse to connect even though
+// 127.0.0.1 works. Omitting the host binds :: and 0.0.0.0; the upstreams remain
+// loopback-only, and this listener is still unreachable from outside the machine
+// in practice because it serves only the local dev certificates.
+server.listen(TLS_PORT, () => {
   console.log(`  TLS proxy → https://localhost:${TLS_PORT}  (WebSocket upgrades enabled)`);
   console.log(`    ${DASHBOARD_PREFIX}/*  → ${DASHBOARD_UPSTREAM}`);
   console.log(`    /*          → ${MARKETING_UPSTREAM}`);
