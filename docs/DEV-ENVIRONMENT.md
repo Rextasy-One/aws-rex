@@ -127,7 +127,7 @@ first run.
 echo | openssl s_client -connect localhost:3000 -servername localhost -CAfile "$(mkcert -CAROOT)/rootCA.pem" 2>&1 | grep 'Verify return code'
 
 # Both apps answer through the single origin
-for p in / /resume /dashboard /dashboard/dashboard; do
+for p in / /resume /dashboard; do
   curl -s --cacert "$(mkcert -CAROOT)/rootCA.pem" -o /dev/null -w "$p %{http_code}\n" "https://localhost:3000$p"
 done
 
