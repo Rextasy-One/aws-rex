@@ -41,6 +41,52 @@ browser sees**. Keep it `https://localhost:3000` and keep the dashboard under `/
   is set on the origin that renders every page. A dashboard-hosted callback will work but will not
   share cookies with the marketing app — design for it explicitly.
 
+### 2. Auth: Auth.js in the marketing app
+
+Auth lives in the **marketing** app because it owns the browser origin, so its session cookie is
+shared with everything proxied under it (`/dashboard`).
+
+| Piece          | Location                                                        |
+| -------------- | --------------------------------------------------------------- |
+| Auth.js config | `source/marketing-site/src/auth.ts`                             |
+| Route handler  | `source/marketing-site/src/app/api/auth/[...nextauth]/route.ts` |
+| Login page     | `source/marketing-site/src/app/login/page.tsx`                  |
+| Credentials    | `source/marketing-site/.env.local` (gitignored)                 |
+| Status check   | `pnpm auth:doctor`                                              |
+
+Providers register **only when their credentials exist**, so the app runs before any OAuth app is
+created. Until then `/login` renders each provider disabled with the exact env vars it needs, and
+`/api/auth/providers` returns `{}`. Fill in `.env.local` and it works with no code change.
+
+Redirect URIs (must match **exactly** — no wildcards):
+
+```
+https://localhost:3000/api/auth/callback/google
+https://localhost:3000/api/auth/callback/facebook
+https://localhost:3000/api/auth/callback/apple
+```
+
+#### Localhost support per provider
+
+| Provider | localhost allowed? | Notes                                                                |
+| -------- | ------------------ | -------------------------------------------------------------------- |
+| Google   | ✅ `http` exempt   | Google exempts localhost from its HTTPS rule. Exact match required.  |
+| Facebook | ✅                 | HTTPS redirect URI required; app must be Live for non-role accounts. |
+| Apple    | ❌ **no**          | Must be a real domain — use the hosts alias below.                   |
+
+For Apple, `pnpm setup:hosts` prints the `/etc/hosts` entry (`127.0.0.1 rexstaples.local`) and
+`pnpm setup:certs` already includes `rexstaples.local` in the certificate. Register
+`https://rexstaples.local:3000/api/auth/callback/apple` with Apple.
+
+**Apple's `AUTH_APPLE_SECRET` is not the `.p8` key.** It is a JWT signed with it that **expires every
+6 months** — rotation is required or sign-in fails silently. See `.env.example`.
+
+#### Development secret
+
+Auth.js refuses to start without a secret, including for `/login` and `/api/auth/providers`. A
+clearly-labelled, fixed development secret is used when `AUTH_SECRET` is unset; **production builds
+still require a real one** and will fail without it.
+
 ### 2. TLS trust for Node processes: use `NODE_USE_SYSTEM_CA=1`
 
 Preferred mechanism. Node 24 can read the macOS keychain — the same store Chrome and Safari use —

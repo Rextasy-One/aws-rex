@@ -21,7 +21,9 @@
     "build": "pnpm -r --if-present run build",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
     "dev:dashboard": "pnpm --filter @aws-rex/dashboard dev",
-    "dev:marketing": "pnpm --filter @aws-rex/marketing-site dev"
+    "dev:marketing": "pnpm --filter @aws-rex/marketing-site dev",
+    "auth:doctor": "node scripts/auth-doctor.mjs",
+    "setup:hosts": "node scripts/setup-hosts.mjs"
   },
   "prettier": "@aws-rex/config/prettier",
   "devDependencies": {

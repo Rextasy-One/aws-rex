@@ -12,6 +12,8 @@
  *   pnpm setup:certs              # (re)generate certs for localhost
  *   pnpm setup:certs -- --force   # overwrite existing files
  *
+ * For Sign in with Apple an extra host alias is required: `pnpm setup:hosts`.
+ *
  * Requirement: `brew install mkcert` (and once, `mkcert -install`).
  */
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -24,8 +26,13 @@ const CERT_DIR = path.join(ROOT, 'certs');
 const CERT_FILE = path.join(CERT_DIR, 'localhost.pem');
 const KEY_FILE = path.join(CERT_DIR, 'localhost-key.pem');
 
-/** Hostnames the certificate must cover. */
-const HOSTS = ['localhost', '*.localhost', '127.0.0.1', '::1'];
+/**
+ * Hostnames the certificate must cover.
+ *
+ * `rexstaples.local` exists for Sign in with Apple, which rejects `localhost` as a
+ * redirect URI. It requires a hosts alias (see `scripts/setup-hosts.mjs`).
+ */
+const HOSTS = ['localhost', '*.localhost', 'rexstaples.local', '127.0.0.1', '::1'];
 
 const FIREFOX_APPS = ['/Applications/Firefox.app', '/Applications/Firefox Developer Edition.app'];
 const FIREFOX_POLICY_DIR = path.join(
