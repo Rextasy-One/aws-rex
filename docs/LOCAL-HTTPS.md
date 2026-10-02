@@ -30,14 +30,20 @@ A locally-trusted CA avoids all of it.
    Chrome and Safari use the system store, so they trust every cert mkcert issues.
 2. Issues a leaf certificate for `localhost`, `*.localhost`, `127.0.0.1`, `::1`.
 
-**Node does not use the system trust store.** Measured on this machine:
+**Node does not use the system trust store by default**, but Node 24 can be told to. Measured here:
 
-| Consumer                                    | Result                               |
-| ------------------------------------------- | ------------------------------------ |
-| Chrome / Safari (system keychain)           | ✅ trusted                           |
-| Firefox (if `ImportEnterpriseRoots` is on)  | ✅ trusted                           |
-| Node with default trust                     | ❌ `UNABLE_TO_VERIFY_LEAF_SIGNATURE` |
-| Node with `NODE_EXTRA_CA_CERTS=<mkcert CA>` | ✅ `200`                             |
+| Consumer                                    | Result                                |
+| ------------------------------------------- | ------------------------------------- |
+| Chrome / Safari (system keychain)           | ✅ trusted                            |
+| Firefox (if `ImportEnterpriseRoots` is on)  | ✅ trusted                            |
+| Node, `NODE_USE_SYSTEM_CA=1`                | ✅ `200` — keychain, no CA path       |
+| Node with default trust                     | ❌ `UNABLE_TO_VERIFY_LEAF_SIGNATURE`  |
+| Node with `NODE_EXTRA_CA_CERTS=<mkcert CA>` | ✅ `200`                              |
+| Node with `--use-openssl-ca`                | ❌ OpenSSL ignores the macOS keychain |
+
+`NODE_USE_SYSTEM_CA=1` is set by every workspace script, so Node matches the browsers with no
+per-machine setup. `scripts/dev-ca.mjs` additionally resolves a CA path for processes started
+without it.
 
 Safari uses the system keychain and needs nothing extra. Firefox keeps its own store, so
 `scripts/setup-certs.mjs` writes an enterprise policy (per-user

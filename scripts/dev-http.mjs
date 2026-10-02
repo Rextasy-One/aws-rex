@@ -4,11 +4,13 @@
  *   http://localhost:3000            marketing app
  *   http://localhost:3000/dashboard  the dashboard app (proxied by Next rewrites)
  *
- * Simpler than `pnpm dev`, but the dashboard's assets are only correct because the
- * dashboard is started with `basePath=/dashboard`. See README.md for tradeoffs.
+ * Simpler than `pnpm dev`, but there is no TLS: secure-context APIs, cookies
+ * marked `Secure` and OAuth redirect testing all behave differently. Use
+ * `pnpm dev` for anything auth-related.
  */
 import { spawn } from 'node:child_process';
 import path from 'node:path';
+import './dev-ca.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 

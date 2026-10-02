@@ -9,16 +9,17 @@
  *   2. marketing     next dev on :3002           (proxy target for the dashboard)
  *   3. tls-proxy     serves HTTPS on :3000 and routes by path
  *
- * Run `pnpm setup:certs` first (needs `brew install mkcert`). See README.md.
+ * Run `pnpm setup:certs` first (needs `brew install mkcert`). See docs/LOCAL-HTTPS.md.
  *
  * Why not Next's `rewrites()` for the dashboard? It fetches an HTTPS destination
- * with global `fetch`, which has no custom-CA hook, and Node ignores the system
- * trust store. Keeping the upstreams on HTTP loopback and terminating TLS once in
- * `tls-proxy.mjs` sidesteps that entirely.
+ * with global `fetch`, which has no custom-CA hook and cannot carry WebSocket
+ * upgrades. Keeping the upstreams on HTTP loopback and terminating TLS once in
+ * `tls-proxy.mjs` sidesteps both.
  */
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { caPath } from './dev-ca.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CERT_DIR = path.join(ROOT, 'certs');
@@ -32,6 +33,12 @@ for (const file of ['localhost.pem', 'localhost-key.pem']) {
     console.error(`\n  ✖ Missing certs/${file}\n\n    Run: pnpm setup:certs\n`);
     process.exit(1);
   }
+}
+
+if (!caPath) {
+  console.error(
+    '\n  ⚠ No mkcert CA found. HTTPS calls from Node will fail.\n' + '    Run: pnpm setup:certs\n',
+  );
 }
 
 const children = [];

@@ -41,15 +41,29 @@ browser sees**. Keep it `https://localhost:3000` and keep the dashboard under `/
   is set on the origin that renders every page. A dashboard-hosted callback will work but will not
   share cookies with the marketing app — design for it explicitly.
 
-### 2. Server-to-server calls need the CA, always
+### 2. TLS trust for Node processes: use `NODE_USE_SYSTEM_CA=1`
 
-Any Node process fetching a local HTTPS endpoint (or a service with a private CA) needs
-`NODE_EXTRA_CA_CERTS`. There is no central interceptor. `scripts/dev.mjs` sets it; any new
-background process, test runner, or codegen step must do the same or it will fail with
-`UNABLE_TO_VERIFY_LEAF_SIGNATURE`.
+Preferred mechanism. Node 24 can read the macOS keychain — the same store Chrome and Safari use —
+so mkcert certificates just work with **no CA path and no per-machine configuration**:
 
-**Consider early:** one prefixed env file (`NODE_EXTRA_CA_CERTS`, `GRAPHQL_ENDPOINT`,
-`OAUTH_*`) sourced by every entry point, so new tooling cannot silently miss it.
+```bash
+NODE_USE_SYSTEM_CA=1 node script.mjs   # or the flag: node --use-system-ca
+```
+
+Every workspace entry point sets it (`pnpm dev`, `pnpm dev:http`, `pnpm setup:certs`), and it
+propagates through pnpm scripts. New tooling should either be invoked through those scripts or set
+the variable itself.
+
+| Mechanism                        | Result                                             |
+| -------------------------------- | -------------------------------------------------- |
+| `NODE_USE_SYSTEM_CA=1`           | ✅ reads the keychain — nothing else needed        |
+| `NODE_EXTRA_CA_CERTS=<ca>`       | ✅ works; needs the CA path per process            |
+| `--use-openssl-ca`               | ❌ OpenSSL does **not** read the macOS keychain    |
+| `NODE_TLS_REJECT_UNAUTHORIZED=0` | ⚠️ works, but disables verification for everything |
+
+`scripts/dev-ca.mjs` resolves a concrete CA path as a fallback for anything started without the
+flag, so both mechanisms are covered. A `NODE_EXTRA_CA_CERTS` already in the environment is never
+overridden.
 
 ### 3. GraphQL has three transports with different caching and proxy behaviour
 

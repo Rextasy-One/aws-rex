@@ -1,10 +1,10 @@
 /**
- * TLS terminator with WebSocket support for one-host local development.
+ * HTTPS terminator with WebSocket support for one-host local development.
  *
  *   https://localhost:3000            → marketing app     (next dev :3002)
- *   wss://localhost:3000/_next/*      → marketing HMR     (next dev :3002)
+ *   wss://localhost:3000/_next/hmr    → marketing HMR     (next dev :3002)
  *   https://localhost:3000/dashboard  → dashboard app     (next dev :3001, basePath /dashboard)
- *   wss://localhost:3000/dashboard/*  → dashboard HMR     (next dev :3001)
+ *   wss://localhost:3000/dashboard/_next/hmr → dashboard HMR
  *
  * Why a proxy instead of Next's `rewrites()`: `rewrites()` fetches an HTTPS
  * destination with global `fetch`, which has no custom-CA hook, and Node ignores
@@ -22,6 +22,7 @@ import fs from 'node:fs';
 import https from 'node:https';
 import net from 'node:net';
 import path from 'node:path';
+import './dev-ca.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CERT_DIR = path.join(ROOT, 'certs');
@@ -53,9 +54,9 @@ function pickUpstream(pathname) {
   return isDashboard ? DASHBOARD_UPSTREAM : MARKETING_UPSTREAM;
 }
 
-function hostOf(origin, port) {
-  const { hostname } = new URL(origin);
-  return { host: hostname, port: port ?? Number(new URL(origin).port || 80) };
+function hostOf(origin) {
+  const { hostname, port } = new URL(origin);
+  return { host: hostname, port: Number(port || 80) };
 }
 
 const server = https.createServer({ cert, key }, async (req, res) => {

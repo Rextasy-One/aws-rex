@@ -9,9 +9,9 @@
     "pnpm": ">=12.6.0"
   },
   "scripts": {
-    "dev": "node scripts/dev.mjs",
-    "dev:http": "node scripts/dev-http.mjs",
-    "setup:certs": "node scripts/setup-certs.mjs",
+    "dev": "NODE_USE_SYSTEM_CA=1 node scripts/dev.mjs",
+    "dev:http": "NODE_USE_SYSTEM_CA=1 node scripts/dev-http.mjs",
+    "setup:certs": "NODE_USE_SYSTEM_CA=1 node scripts/setup-certs.mjs",
     "lint": "pnpm -r --if-present run lint",
     "lint:fix": "pnpm -r --if-present run lint -- --fix",
     "format": "pnpm -r --if-present run format && prettier --write .",
