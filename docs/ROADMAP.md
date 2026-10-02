@@ -1,5 +1,8 @@
 # Roadmap
 
+Engineering work that is only code. Work blocked on an account, a credential, or a decision is in
+[`../TODO.md`](../TODO.md).
+
 Prioritized, top to bottom. Shipped work is listed for context.
 
 ## Shipped
@@ -19,16 +22,11 @@ Prioritized, top to bottom. Shipped work is listed for context.
 
 7. **Production topology for the dashboard.** Development is handled: the marketing site (3000) runs
    on the canonical port and proxies `/dashboard` to the dashboard (3001) via `DASHBOARD_ORIGIN`.
-   For production, set that origin to the dashboard's deployed URL — or front both with one
-   load balancer / reverse proxy.
+   The production choice is a **person decision** — tracked in [`../TODO.md`](../TODO.md).
 8. **Resume content.** `source/marketing-site/src/app/resume/page.tsx` is a stub.
-9. **Publish the shared packages (deferred).** Development is intentionally local-first: local links
-   cover everything until release. When publishing to the **AWS private registry (CodeArtifact)**:
-   - authenticate with `aws codeartifact login` and scope `@aws-rex:registry` in `.npmrc`;
-   - add `publishConfig` to `@aws-rex/config` and `@aws-rex/common-components`;
-   - decide the `common-components` artifact (raw TS source today; `tsup` + `dist` for registry);
-   - keep tokens out of the repo.
-     See [`TOOLING.md`](./TOOLING.md#deferred-publishing-to-aws-codeartifact).
+9. **Publish the shared packages (deferred).** Development is intentionally local-first. Publishing
+   needs registry credentials, so the trigger lives in [`../TODO.md`](../TODO.md); the how-to is in
+   [`TOOLING.md`](./TOOLING.md#deferred-publishing-to-aws-codeartifact).
 10. **Renovate/Dependabot.** Per-repo config to keep shared-package ranges and toolchain versions
     current across teams — the polyrepo replacement for `catalog:`.
 11. **`common-components` harness.** A standalone preview so the library is reviewable on GitHub

@@ -58,7 +58,9 @@ for (const provider of PROVIDERS) {
 
 console.log(
   `\n  ${configured} of ${PROVIDERS.length} providers configured.` +
-    (configured === 0 ? '\n  Copy .env.example to .env.local to get started.\n' : '\n'),
+    (configured === 0
+      ? '\n  Copy .env.example to .env.local, then follow TODO.md to create the OAuth client.\n'
+      : '\n'),
 );
 
 process.exit(configured === 0 ? 1 : 0);

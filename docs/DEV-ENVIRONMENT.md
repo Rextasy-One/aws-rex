@@ -58,13 +58,21 @@ Providers register **only when their credentials exist**, so the app runs before
 created. Until then `/login` renders each provider disabled with the exact env vars it needs, and
 `/api/auth/providers` returns `{}`. Fill in `.env.local` and it works with no code change.
 
+**Creating the OAuth clients is a to-do for a person, not a code change** — the steps, per provider,
+are in [`../TODO.md`](../TODO.md). Google is the only one with no blocking constraint; Apple requires
+a paid developer account, and Facebook requires app review for production.
+
 Redirect URIs (must match **exactly** — no wildcards):
 
 ```
 https://localhost:3000/api/auth/callback/google
 https://localhost:3000/api/auth/callback/facebook
-https://localhost:3000/api/auth/callback/apple
+https://rexstaples.local:3000/api/auth/callback/apple   (Apple rejects localhost)
 ```
+
+> The consent screen's **Testing** status costs you something concrete: Google expires refresh tokens
+> after **7 days** and caps test users at 100. Publish the app before real users. Full detail in
+> [`../TODO.md`](../TODO.md).
 
 #### Localhost support per provider
 

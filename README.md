@@ -28,6 +28,7 @@ The workspace root `.gitignore` ignores `source/*/`, so nested repos are tracked
 ```
 aws-rex/                     # workspace root  (Rextasy-One/aws-rex)
 ├── pnpm-workspace.yaml      # packages: ['source/*'] + linkWorkspacePackages: true
+├── TODO.md                  # work blocked on accounts/credentials/decisions
 ├── docs/                    # ADR, tooling, roadmap
 └── source/
     ├── config/              # repo: @aws-rex/config           (Rextasy-One/config)
@@ -91,4 +92,9 @@ without certificates. See [`docs/LOCAL-HTTPS.md`](./docs/LOCAL-HTTPS.md) and
 
 ## Tooling
 
-See [`docs/TOOLING.md`](./docs/TOOLING.md). Backlog: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
+See [`docs/TOOLING.md`](./docs/TOOLING.md).
+
+## Backlogs
+
+- [`TODO.md`](./TODO.md) — work blocked on a **person**: accounts, credentials, external decisions.
+- [`docs/ROADMAP.md`](./docs/ROADMAP.md) — engineering work that is only code.
