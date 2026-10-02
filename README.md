@@ -74,7 +74,9 @@ pnpm dev           # https://localhost:3000
 ```
 
 `https://localhost:3000` is the marketing site; `https://localhost:3000/dashboard` proxies to the
-dashboard app. `pnpm dev:http` runs the same topology without certificates.
+dashboard app. HMR works (WebSocket upgrades are tunnelled). `pnpm dev:http` runs the same topology
+without certificates. See [`docs/LOCAL-HTTPS.md`](./docs/LOCAL-HTTPS.md) and
+[`docs/DEV-ENVIRONMENT.md`](./docs/DEV-ENVIRONMENT.md).
 
 ## Commands
 

@@ -34,9 +34,16 @@ A locally-trusted CA avoids all of it.
 
 | Consumer                                    | Result                               |
 | ------------------------------------------- | ------------------------------------ |
-| Chrome (system keychain)                    | ✅ trusted                           |
+| Chrome / Safari (system keychain)           | ✅ trusted                           |
+| Firefox (if `ImportEnterpriseRoots` is on)  | ✅ trusted                           |
 | Node with default trust                     | ❌ `UNABLE_TO_VERIFY_LEAF_SIGNATURE` |
 | Node with `NODE_EXTRA_CA_CERTS=<mkcert CA>` | ✅ `200`                             |
+
+Safari uses the system keychain and needs nothing extra. Firefox keeps its own store, so
+`scripts/setup-certs.mjs` writes an enterprise policy (per-user
+`~/Library/Application Support/Mozilla/NativeMessagingHosts`-adjacent `org.mozilla.firefox` policy)
+setting `Certificates.ImportEnterpriseRoots` when Firefox is installed. That makes Firefox honour
+the system store without hand-importing the CA.
 
 That single fact dictates the architecture: because Node's `fetch` (used by Next `rewrites`) has no
 custom-CA hook, an HTTPS destination cannot be proxied reliably from `next.config.ts`. Instead the
@@ -73,11 +80,14 @@ Starting the dashboard with `NEXT_PUBLIC_BASE_PATH=/dashboard` relocates its ass
 
 The TLS proxy is deliberately minimal:
 
-- **No WebSocket / HTTP Upgrade.** HMR uses a WebSocket, so live-updating does not work through the
-  proxy; reload manually. A refresh still picks up changes.
+- **WebSocket upgrades are supported** (HMR works). `/_next/hmr` tunnels to the owning app; both
+  apps answer `101 Switching Protocols`.
 - **HTTP/1.1 only.** No HTTP/2 ALPN.
-- **Chrome only for auto-trust.** Firefox maintains its own store; set
-  `security.enterprise_roots.enabled = true` if you use it.
+- **No compression rewriting or response streaming tuning.** Fine for HTML/JSON/HMR.
 - **Cert expiry.** mkcert leaf certs last ~2.3 years; `pnpm setup:certs -- --force` regenerates.
+  Restart all processes afterwards (they cache the CA at startup).
+
+See [`DEV-ENVIRONMENT.md`](./DEV-ENVIRONMENT.md) for the OAuth/GraphQL implications, and for when to
+replace this proxy with Caddy or nginx.
 
 For work that needs real HMR or is not TLS-sensitive, `pnpm dev:http` is simpler.

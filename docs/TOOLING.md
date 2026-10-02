@@ -87,6 +87,12 @@ them, which would make the workspace root a hard build dependency of every sourc
   the range;
 - Renovate/Dependabot keeps ranges current across repos (the polyrepo replacement for `catalog:`).
 
+## Local development
+
+One HTTPS origin on `https://localhost:3000`, with the dashboard mounted at `/dashboard`, TLS
+terminated by `scripts/tls-proxy.mjs` (WebSocket-capable). See
+[`LOCAL-HTTPS.md`](./LOCAL-HTTPS.md) and [`DEV-ENVIRONMENT.md`](./DEV-ENVIRONMENT.md).
+
 ## Entry points
 
 Root scripts remain the workspace-wide entry points and simply delegate to each source repo:
