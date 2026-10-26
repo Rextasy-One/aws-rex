@@ -17,6 +17,9 @@ saveWorkspaceProtocol: false
 # scripts. These are the known-good native/build toolchain packages.
 allowBuilds:
   '@tailwindcss/oxide': true
+  # Transitive native dep of @opencode-ai/sdk. Only used for a fast msgpack path
+  # at runtime; declining avoids running a build script for a type-only need.
+  msgpackr-extract: false
   sharp: true
   unrs-resolver: true
 

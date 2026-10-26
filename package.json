@@ -28,6 +28,8 @@
   "prettier": "@aws-rex/config/prettier",
   "devDependencies": {
     "@aws-rex/config": "^1.0.0",
+    "@opencode-ai/plugin": "1.19.4",
+    "@types/node": "^24.19.0",
     "prettier": "^3.9.9"
   }
 }
