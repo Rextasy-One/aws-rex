@@ -72,13 +72,24 @@ any time to see what is still missing.
 - [ ] **Brand mark compliance.** The login buttons compose the vendor glyphs. Google and Apple both
       publish official button assets with their own colour/size rules that a composed button may not
       satisfy. Relevant only if a provider enforces it.
-- [ ] **Rotate the development `AUTH_SECRET`.** A fixed, clearly-labelled dev secret is used when
+- [x] **Rotate the development `AUTH_SECRET`.** A fixed, clearly-labelled dev secret is used when
       unset so auth routes work locally. Production requires a real one and fails without it — verify
       that before the first deploy.
+
+## External service credentials
+
+- [x] **Google Maps API key.** Created, referrer-restricted to `localhost/*`, and rotated after an
+      accidental paste. Stored in `source/dashboard/.env.local`.
+- [ ] **Restrict the Maps key to the Maps JavaScript API.** The referrer restriction is set; the API
+      restriction is separate and still worth adding. Google Cloud → Credentials → the key → _API
+      restrictions_ → restrict to _Maps JavaScript API_.
+- [ ] **Production referrer.** Add the deployed origin to the same key, or create a second key for
+      production. `localhost/*` alone will not work once deployed.
 
 ---
 
 ## Nothing here blocks local development
 
 The workspace runs, builds, and passes `pnpm check` with **zero** OAuth credentials configured. The
-login page renders each unconfigured provider with the exact env vars it needs.
+login page renders each unconfigured provider with the exact env vars it needs, and the Map page
+renders a notice when its key is absent.

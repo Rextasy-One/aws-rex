@@ -97,6 +97,7 @@ The application. Runs on 3001, mounted at /dashboard by the marketing site.
     package.json                    Scripts and dependencies. Port 3001.
     next.config.ts                  Reads NEXT_PUBLIC_BASE_PATH so the app mounts under /dashboard.
     postcss.config.mjs              Tailwind v4 PostCSS plugin.
+    .env.example                    Required env vars: the Google Maps API key.
     src/app/layout.tsx              Root layout. Renders Navigation, AppNav and Footer.
     src/app/page.tsx                Dashboard page at the app root route.
     src/app/map/page.tsx            Map page. Falls back to a notice when no API key.
