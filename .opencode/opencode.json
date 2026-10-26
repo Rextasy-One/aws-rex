@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "bash": {
+      "*": "allow",
+      "rm -rf *": "ask",
+      "rm -fr *": "ask",
+      "git reset --hard*": "ask",
+      "git clean *": "ask",
+      "git push --force*": "ask",
+      "git push -f *": "ask",
+      "git branch -D*": "ask"
+    }
+  }
+}

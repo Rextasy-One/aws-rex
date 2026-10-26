@@ -37,7 +37,9 @@ Paths are relative to the workspace root.
 
     .opencode/AGENTS.md                  Project rules for agents, with the incidents behind each.
     .opencode/agents/code-reviewer.md    Reviewer subagent. Prioritises evidence quality.
-    .opencode/plugins/guardrails.ts      Reminder hooks: new markdown, destructive commands, repo map.
+    .opencode/agents/supervisor.md       Coordinator agent. Denies edit and bash. Delegates work.
+    .opencode/opencode.json              Permission gates. Destructive commands require approval.
+    .opencode/plugins/guardrails.ts      Reminder hooks: new markdown, repo map.
     .opencode/repo-map.md                This file. One line per source file.
     .opencode/skills/eslint/SKILL.md     How lint is centralised and when to change rules.
     .opencode/skills/prettier/SKILL.md   How formatting is centralised, and where config lives.

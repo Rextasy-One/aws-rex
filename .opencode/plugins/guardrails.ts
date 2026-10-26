@@ -5,8 +5,12 @@ import path from 'node:path';
 /**
  * Guardrails for this project.
  *
- * All three hooks REMIND. They never throw and never block a tool. The rule text
- * stays out of the instruction files and appears at the moment it matters instead.
+ * These hooks REMIND. They never throw and never block a tool. The rule text stays
+ * out of the instruction files and appears at the moment it matters instead.
+ *
+ * Destructive shell commands are NOT handled here. They are gated by the `ask`
+ * permission in `.opencode/opencode.json`, which stops the command for approval
+ * instead of warning after it runs.
  *
  * Every fire is appended to `.opencode/_observations/hook-log.md` so you can tell
  * later whether a hook earns its place or is just noise.
@@ -15,22 +19,15 @@ import path from 'node:path';
 const LOG_RELATIVE = '.opencode/_observations/hook-log.md';
 const MAP_RELATIVE = '.opencode/repo-map.md';
 
-/** Paths where new markdown is already sanctioned. */
+/**
+ * Paths where new markdown is already sanctioned.
+ */
 const MARKDOWN_ALLOWLIST: readonly RegExp[] = [
   /^TODO\.md$/,
   /^README\.md$/,
   /^docs\/.+\.md$/,
   /^\.opencode\/.+\.md$/,
   /(^|\/)README\.md$/,
-];
-
-/** Commands that discard work irreversibly. */
-const DESTRUCTIVE_PATTERNS: readonly { pattern: RegExp; label: string }[] = [
-  { pattern: /\brm\s+(-[a-zA-Z]*[rf][a-zA-Z]*\s+)+/, label: 'rm -rf' },
-  { pattern: /\bgit\s+reset\s+--hard\b/, label: 'git reset --hard' },
-  { pattern: /\bgit\s+clean\s+-[a-zA-Z]*f/, label: 'git clean -f' },
-  { pattern: /\bgit\s+push\b[^\n]*(--force|-f)\b/, label: 'git push --force' },
-  { pattern: /\bgit\s+branch\s+-D\b/, label: 'git branch -D' },
 ];
 
 /** File types that belong in the repo map. Keeps the reminder focused. */
@@ -122,7 +119,6 @@ export const Guardrails: Plugin = async ({ directory, client }: PluginInput): Pr
     'tool.execute.before': async (input, output) => {
       const args = output.args as Record<string, unknown> | undefined;
       const relative = relativeTo(directory, args?.filePath ?? args?.path);
-      const command = args?.command;
 
       // A new markdown file outside the sanctioned paths.
       if (input.tool === 'write' && relative?.endsWith('.md')) {
@@ -132,17 +128,6 @@ export const Guardrails: Plugin = async ({ directory, client }: PluginInput): Pr
           const message = `New markdown: ${relative}. Ask first unless it was requested.`;
           await toast(message);
           await logFire(directory, 'markdown', relative);
-        }
-      }
-
-      // A command that discards work permanently.
-      if (input.tool === 'bash' && typeof command === 'string') {
-        const hit = DESTRUCTIVE_PATTERNS.find(({ pattern }) => pattern.test(command));
-
-        if (hit) {
-          const message = `Destructive: ${hit.label}. Confirm the target first.`;
-          await toast(message);
-          await logFire(directory, 'destructive', `${hit.label} :: ${command.slice(0, 120)}`);
         }
       }
     },
