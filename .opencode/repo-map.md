@@ -97,8 +97,10 @@ The application. Runs on 3001, mounted at /dashboard by the marketing site.
     package.json                    Scripts and dependencies. Port 3001.
     next.config.ts                  Reads NEXT_PUBLIC_BASE_PATH so the app mounts under /dashboard.
     postcss.config.mjs              Tailwind v4 PostCSS plugin.
-    src/app/layout.tsx              Root layout. Renders Navigation and Footer.
+    src/app/layout.tsx              Root layout. Renders Navigation, AppNav and Footer.
     src/app/page.tsx                Dashboard page at the app root route.
+    src/app/map/page.tsx            Map placeholder. Reports a missing API key.
+    src/components/AppNav.tsx       Secondary nav for featured applications.
     src/components/Navigation.tsx   Client wrapper. Re-adds basePath, which Next strips.
     src/app/globals.css             Tailwind entry. Registers the shared library for scanning.
 
