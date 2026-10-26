@@ -99,7 +99,8 @@ The application. Runs on 3001, mounted at /dashboard by the marketing site.
     postcss.config.mjs              Tailwind v4 PostCSS plugin.
     src/app/layout.tsx              Root layout. Renders Navigation, AppNav and Footer.
     src/app/page.tsx                Dashboard page at the app root route.
-    src/app/map/page.tsx            Map placeholder. Reports a missing API key.
+    src/app/map/page.tsx            Map page. Falls back to a notice when no API key.
+    src/components/MapCanvas.tsx    Google Maps canvas. Centres on geolocation, falls back silently.
     src/components/AppNav.tsx       Secondary nav for featured applications.
     src/components/Navigation.tsx   Client wrapper. Re-adds basePath, which Next strips.
     src/app/globals.css             Tailwind entry. Registers the shared library for scanning.
