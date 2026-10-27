@@ -102,7 +102,8 @@ The application. Runs on 3001, mounted at /dashboard by the marketing site.
     src/app/page.tsx                Dashboard page at the app root route.
     src/app/map/page.tsx            Map page. Falls back to a notice when no API key.
     src/components/MapCanvas.tsx    Google Maps canvas. Centres on geolocation, falls back silently.
-    src/components/MapDebugPanel.tsx  Temporary diagnostics: key, referrer, SDK status, location.
+    src/components/MapDebugPanel.tsx  Temporary diagnostics: key, referrer, SDK status, location, viewport.
+    src/components/mapViewport.ts      sessionStorage read, write and validation for the map camera.
     src/components/AppNav.tsx       Secondary nav for featured applications.
     src/components/Navigation.tsx   Client wrapper. Re-adds basePath, which Next strips.
     src/app/globals.css             Tailwind entry. Registers the shared library for scanning.
