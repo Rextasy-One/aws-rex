@@ -84,7 +84,7 @@ The splash site. Runs on 3000. Owns authentication, because it owns the browser 
     src/app/layout.tsx                        Root layout. Renders Navigation and Footer.
     src/app/page.tsx                          Splash page at /.
     src/app/login/page.tsx                    Login page. Provider buttons with brand marks.
-    src/app/resume/page.tsx                   Resume page. Stub, awaiting content.
+    src/app/resume/page.tsx                   Resume. Full content, converted from the print HTML.
     src/app/api/auth/[...nextauth]/route.ts   Auth.js route handler. All callback URLs.
     src/components/Navigation.tsx             Client wrapper. Supplies usePathname to Header.
     src/app/globals.css                       Tailwind entry. Registers the shared library for scanning.
